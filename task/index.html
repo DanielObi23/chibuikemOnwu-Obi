@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./lib/css/styles.css">
+    <title>API Interface</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th id="api-name" class="column1">API name</th>
+                <th id="api-description" class="column2">API description</th>
+                <th id="api-submit" class="column3"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="column1">
+                    <span>1. countryCode</span>
+                </td>
+                <td class="column2">
+                    <span class="api-description">Returns the iso country code for the given latitude/longitude</span>
+                </td>
+                <td class="column3">
+                    <button class="submit-btn" id="http://api.geonames.org/countryCode?lat=47.03&lng=10.2&username=daniel456">Submit</button>
+                </td>
+            </tr>
+            <tr>
+                <td class="column1">
+                    <span>2. countryInfo</span>
+                </td>
+                <td class="column2">
+                    <span class="api-description">Country information : Capital, Population, Area in square km, Bounding Box of mainland (excluding offshore islands)</span>
+                </td>
+                <td class="column3">
+                    <button class="submit-btn" id="http://api.geonames.org/countryInfoJSON?formatted=true&lang=it&country=DE&username=daniel456&style=full">Submit</button>
+                </td>
+            </tr>
+            <tr>
+                <td class="column1">
+                    <span>3. weather</span>
+                </td>
+                <td class="column2">
+                    <span class="api-description">Returns a weather station with the most recent weather observation</span>
+                </td>
+                <td class="column3">
+                    <button class="submit-btn" id="http://api.geonames.org/findNearByWeatherJSON?lat=43&lng=-2&username=daniel456">Submit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="results-section">
+        <h2 class="results-title">RESULTS</h2>
+        <div id="results"></div>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="./lib/js/task.js"></script>
+</body>
+</html>
