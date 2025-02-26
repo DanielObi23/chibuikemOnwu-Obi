@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./lib/css/styles.css">
+    <title>API Interface</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th id="api-name" class="column1">API name</th>
+                <th id="api-description" class="column2">API input parameters</th>
+                <th id="api-submit" class="column3"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="column1">
+                    <span>1. countryCode</span>
+                </td>
+                <td class="column2">
+                    <form method="post" id="countryCode">
+                        <input class="name" type="hidden" name="name" value="countryCode" required>
+                        Latitude: <input type="number" name="lat" id="lat" required>
+                        Longitude: <input type="number" name="lng" id="lng" required>
+                </td>
+                <td class="column3">
+                        <input type="submit" value="Submit">
+                    </form>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="column1">
+                    <span>2. countryInfo</span>
+                </td>
+                <td class="column2">
+                    <form method="post" id="countryInfo">
+                        <input class="name" type="hidden" name="name" value="countryInfo" required>
+                        Country: <select name="country" id="country" required>
+                                    <option value="US">United States</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="GB">United Kingdom</option>
+                                    <option value="FR">France</option>
+                                    <option value="JP">Japan</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="AU">Australia</option>
+                                    <option value="BR">Brazil</option>
+                                    <option value="IN">India</option>
+                                    <option value="CN">China</option>
+                                    <option value="RU">Russia</option>
+                                    <option value="ZA">South Africa</option>
+                                 </select>
+                </td>
+                <td class="column3">
+                        <input type="submit" value="Submit">
+                    </form>
+                </td>
+            </tr>
+            
+            <tr>
+                <td class="column1">
+                    <span>3. findNearByWeatherJSON</span>
+                </td>
+                <td class="column2">
+                    <form method="post" id="findNearByWeatherJSON">
+                        <input class="name" type="hidden" name="name" value="findNearByWeatherJSON" required>
+                        Latitude: <input type="number" name="lat" id="lat2" required>
+                        Longitude: <input type="number" name="lng" id="lng2" required>
+                </td>
+                <td class="column3">
+                        <input type="submit" value="Submit">
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="results-section">
+        <h2 class="results-title">RESULTS</h2>
+        <div id="results"></div>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="./lib/js/task.js"></script>
+</body>
+</html>
