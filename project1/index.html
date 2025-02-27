@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="libs/css/app.css" rel="stylesheet">
+    <!-- In your HTML <head> section -->
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.8.0/leaflet.css" />
+
+    <!-- Toastify -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.6.1/toastify.min.css" />
+
+    <!-- Leaflet MarkerCluster CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" />
+
+    <!-- Leaflet Extra Markers -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-extra-markers/1.2.1/css/leaflet.extra-markers.min.css" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" />
+
+    <!-- Leaflet EasyButton -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.css" />
+    <title>Country</title>
+</head>
+<body>
+    <span id="selectContainer">
+      <input class="form-control" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="location" type="text" placeholder="Location/landmark: " aria-label="default input example">
+      </span>
+      
+      <div id="map"></div>
+
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">Rules for input</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <ul>
+                <li>Must contain at least one alphanumeric character (letters or numbers).</li>
+                <li>Can include spaces, commas, hyphens, and periods for formatting.</li>
+                <li>Must not contain special characters like <code>@</code>, <code>#</code>, <code>$</code>, <code>%</code>, etc., unless part of a valid address format (e.g., unit numbers like <code>#123</code>).</li>
+                <li>Must not exceed 100 characters in length.</li>
+                <li>Must include at least one street name or landmark.</li>
+                <li>Optional: Can include a city, state, or postal code for better accuracy.</li>
+                <li>Must not be empty or consist solely of whitespace.</li>
+              </ul>
+
+              <p><strong>e.g</strong> Frauenplan 1, 99423 Weimar, Germany</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Understood</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Display Modal -->
+      <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+              <h1 class="modal-title fs-5" id="dataModalLabel">Location Information</h1>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-4 text-center">
+                  <img id="modalFlag" src="" alt="Country Flag" class="img-fluid mb-3" style="max-height: 100px;">
+                  <div id="modalLocation" class="fw-bold"></div>
+                  <div id="modalContinent" class="text-muted"></div>
+                </div>
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="col-6">
+                      <p class="mb-1 section"><i class="fas fa-money-bill-wave"></i> Currency: 
+                        <span id="modalCurrency" class="badge bg-success"></span>
+                      </p>
+                      <p class="mb-1 section"><i class="fas fa-clock"></i> Timezone: 
+                        <span id="timezone-name" class="badge bg-info"></span>
+                        <span id="timezone-abbr" class="badge bg-info"></span>
+                      </p>
+                    </div>
+                    <div class="col-6">
+                      <p class="mb-1 section"><i class="fas fa-road"></i> Drive Side: 
+                        <span id="modalDriveSide" class="badge bg-warning text-dark"></span>
+                      </p>
+                      <p class="mb-1 section"><i class="fas fa-tachometer-alt"></i> Speed Units: 
+                        <span id="modalSpeedUnits" class="badge bg-danger"></span>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="mt-3">
+                    <small class="text-muted">Full Address:</small>
+                    <div id="modalFullAddress" class="font-monospace small"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leaflet JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.8.0/leaflet.js"></script>
+
+      <!-- Toastify JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.6.1/toastify.min.js"></script>
+
+      <!-- Leaflet MarkerCluster JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+
+      <!-- Leaflet Extra Markers JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-extra-markers/1.2.1/js/leaflet.extra-markers.min.js"></script>
+
+      <!-- Bootstrap JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+
+      <!-- Leaflet EasyButton JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.min.js"></script>
+      <!-- Before closing </body> tag -->
+
+      <!-- jQuery -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+      <script src="libs/js/app.js"></script>
+</body>
+</html>
