@@ -86,7 +86,6 @@ function loadCountryBorder(countryCode) {
     map.removeLayer(window.borderLayer);
   }
   
-  // Show loading overlay
   $("#loadingOverlay").show();
   
   // Fetch GeoJSON data for the selected country
@@ -273,7 +272,6 @@ $(document).ready(function () {
             // Clear existing options
             $('#countrySelect').empty();
             
-            // Add a default option (optional)
             $('#countrySelect').append('<option value="">Select a country</option>');
             
             // Add country options
