@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="libs/css/app.css" rel="stylesheet">
+    <link href="node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
+    <link href="node_modules/toastify-js/src/toastify.css" rel="stylesheet">
+    <link href="node_modules/leaflet.markercluster/dist/MarkerCluster.css" rel="stylesheet">
+    <link href="node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css" rel="stylesheet">
+    <link href="node_modules/leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css" rel="stylesheet">
+    <link href="node_modules/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="node_modules/leaflet-easybutton/src/easy-button.css" rel="stylesheet">
+    <title>Country</title>
+</head>
+<body>
+  <span id="selectContainer" class="d-flex justify-content-center align-items-center mt-3">
+    <div class="d-flex flex-column justify-content-center align-items-center mt-3">
+      <select id="countrySelect" class="form-select shadow-sm">
+        <!-- populate from an AJAX CALL to a PHP routine that returns a JSON object that is an array of just ISO codes and names from countryBorders.geo.json -->
+        <option value="AF">Afghanistan</option>
+        <option value="US">United States</option>
+        <option value="GB">United Kingdom</option>
+        <option value="FR">France</option>
+        <option value="DE">Germany</option>
+        <option value="JP">Japan</option>
+      </select>
+      <div class="form-check form-switch mt-3" id>
+        <input class="form-check-input" type="checkbox" role="switch" id="Airports">
+        <label class="form-check-label fw-bold" for="Airports">Show Airports</label>
+      </div>
+    </div> 
+  </span>
+  
+  <div id="map"></div>
+  <!-- Loading Spinner-->
+  <div id="loadingOverlay">
+    <div class="loader-box">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p>Loading<br/>Requested Data</p>
+    </div>
+  </div>
+  <!-- Country Details Modal-->
+  <div id="countryDetailsModal" class="modal" data-bs-backdrop="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content shadow">
+        <div class="modal-header bg-success bg-gradient text-white">
+          <h5 class="modal-title">Overview</h5>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped" id="dataTable">
+          </table>
+        </div>  
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Country info modal-->
+  <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white d-flex justify-content-center">
+          <h1 class="modal-title fs-5" id="dataModalLabel"><span id="countryInfoName"></span> Information</h1>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-4 text-center">
+              <img id="modalFlag" src="" alt="Country Flag" class="img-fluid mb-3 shadow" style="max-height: 100px;">
+              <div id="modalLocation" class="fw-bold"></div>
+              <div id="modalContinent" class="text-muted"></div>
+            </div>
+            <div class="col-md-8">
+              <div class="row">
+                <div class="col-6">
+                  <p class="mb-1 section"><i class="fas fa-money-bill-wave"></i> Currency:<br /> 
+                    <span id="modalCurrency" class="badge bg-success"></span>
+                  </p>
+                  <p class="mb-1 section"><i class="fas fa-clock"></i> Timezone:<br />
+                    <span id="timezone-name" class="badge bg-info"></span>
+                    <span id="timezone-abbr" class="badge bg-info"></span>
+                  </p>
+                </div>
+                <div class="col-6">
+                  <p class="mb-1 section"><i class="fas fa-road"></i> Drive Side:<br /> 
+                    <span id="modalDriveSide" class="badge bg-warning text-dark"></span>
+                  </p>
+                  <p class="mb-1 section"><i class="fas fa-tachometer-alt"></i> Speed Units:<br />
+                    <span id="modalSpeedUnits" class="badge bg-danger"></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- News info modal-->
+  <div class="modal fade" id="newsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white d-flex justify-content-center">
+          <h1 class="modal-title fs-5" id="newsModalLabel"><span id="newsCountry"></span> top news headline</h1>
+        </div>
+        <div class="modal-body" id="newsContent">
+          <!-- News content goes here -->
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Currency conversion info modal-->
+  <div class="modal fade" id="currencyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header d-flex justify-content-center">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Currency converter</h1>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex align-items-center mb-3">
+            <div class="form-floating flex-grow-1 me-2">
+              <select class="form-select" id="selectedCurrency" aria-label="Floating label select example">
+                <option value="USD">USD</option>
+                <option value="foreign" class="currencyName"></option>
+              </select>
+              <label for="selectedCurrency">Select conversion: </label>
+            </div>
+            <button class="btn btn-outline-info" data-bs-target="#tipsModal" data-bs-toggle="modal">
+              <i class="fas fa-lightbulb"></i>
+            </button>
+          </div>
+          
+          <div class="form-floating py-3">
+            <input type="number" class="form-control" placeholder="Leave number here" id="floatingTextarea"/>
+            <label for="floatingTextarea">Number</label>
+          </div>
+          
+          <div class="form-floating mb-3">
+            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextareaDisabled" disabled></textarea>
+            <label for="floatingTextareaDisabled" id="exchangeResult">Exchange Value</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="convertButton">Convert</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="tipsModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Conversion tip</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Select <span class="currencyName"></span> to convert to USD (<span class="currencyName"></span> -> USD)<br/> 
+          </p>
+          <p>
+            Select USD to convert to <span class="currencyName"></span> (USD -> <span class="currencyName"></span>)
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" data-bs-target="#currencyModal" data-bs-toggle="modal">Back to currency converter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- History info modal-->
+  <div class="modal fade" id="historyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white d-flex justify-content-center">
+          <h1 class="modal-title fs-5" id="newsModalLabel"><span id="historyCountry"></span> historical event</h1>
+        </div>
+        <div class="modal-body">
+          <!-- History content goes here -->
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Weather info modal-->
+  <div class="modal fade" id="weatherModal" tabindex="-1" aria-labelledby="weatherModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header weather-header text-white">
+                <div class="d-flex align-items-center">
+                  <img src="" alt="location weather icon" 
+                        class="country-flag me-3 shadow-sm locationWeatherIcon" style="height: 45px; width: 60px; object-fit: cover;">
+                  <div>
+                      <h2 class="modal-title mb-0 fw-bold" id="cityRegion"></h2>
+                      <div class="d-flex align-items-center">
+                          <i class="fas fa-map-marker-alt me-2"></i>
+                          <span class="small" id="locationName"></span>
+                      </div>
+                  </div>
+                </div>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body weather-body">
+                <!-- Current Weather -->
+                <div class="current-weather card mb-4 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-6 text-center">
+                                <img src="" 
+                                     alt="Weather Icon" 
+                                     class="weather-main-icon mb-3 locationWeatherIcon">
+                                <h3 id="currentWeatherCondition" class="mb-0 text-primary fw-bold"></h3>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center justify-content-end mb-3">
+                                    <h1 class="display-3 fw-bold mb-0" id="currentTemp"></h1>
+                                    <div class="ms-3">
+                                        <div class="text-muted small">FEELS LIKE</div>
+                                        <div class="h4 mb-0" id="feelsLike"></div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-around">
+                                    <div class="text-center">
+                                        <i class="fas fa-tint text-primary fs-4"></i>
+                                        <div class="small text-muted">Humidity</div>
+                                        <div id="humidity" class="fw-bold"></div>
+                                    </div>
+                                    <div class="text-center">
+                                        <i class="fas fa-wind text-primary fs-4"></i>
+                                        <div class="small text-muted">Wind</div>
+                                        <div id="windSpeed" class="fw-bold"></div>
+                                    </div>
+                                    <div class="text-center">
+                                        <i class="fas fa-eye text-primary fs-4"></i>
+                                        <div class="small text-muted">Visibility</div>
+                                        <div id="visibility" class="fw-bold"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sunrise/Sunset -->
+                <div class="sun-times card mb-4 border-0 shadow-sm">
+                    <div class="card-body p-3">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-sun text-warning me-2"></i>
+                                    <div>
+                                        <div class="text-muted small">Sunrise</div>
+                                        <div id="sunrise" class="fw-bold"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-moon text-secondary me-2"></i>
+                                    <div>
+                                        <div class="text-muted small">Sunset</div>
+                                        <div id="sunset" class="fw-bold"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5 Day Forecast -->
+                <div class="forecast-card card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 d-flex justify-content-center pt-5">
+                        <h5 class="m-0 fw-bold"><i class="fas fa-calendar-alt me-2 text-primary"></i>5-Day Forecast</h5>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="row g-3" id="forecastDays">
+                            <!-- Forecast Days-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <script src="node_modules/leaflet/dist/leaflet.js"></script>
+  <script src="node_modules/toastify-js/src/toastify.js"></script>
+  <script src="node_modules/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+  <script src="node_modules/leaflet-extra-markers/dist/js/leaflet.extra-markers.min.js"></script>
+  <script src="node_modules/leaflet-easybutton/src/easy-button.js"></script>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="libs/js/app.js"></script>
+</body>
+</html>
