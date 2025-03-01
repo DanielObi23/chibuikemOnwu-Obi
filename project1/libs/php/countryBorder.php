@@ -17,25 +17,8 @@ if (!$countryCode) {
     exit;
 }
 
-// Path to GeoJSON file
-$geojsonFile = 'countryBorders.geo.json'; // Adjust path based on your folder structure
+$geojsonData = file_get_contents('countryBorders.geo.json');
 
-// Check if file exists
-if (!file_exists($geojsonFile)) {
-    echo json_encode([
-        'status' => [
-            'code' => 500,
-            'message' => 'GeoJSON file not found'
-        ],
-        'data' => null
-    ]);
-    exit;
-}
-
-// Read the GeoJSON file
-$geojsonData = file_get_contents($geojsonFile);
-
-// Parse the JSON data
 $data = json_decode($geojsonData, true);
 
 // Check if parsing was successful
