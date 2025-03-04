@@ -1,0 +1,326 @@
+@font-face {
+  font-family: 'Font Awesome 5 Free';
+  src: url('/vendor/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2') format('woff2');
+}
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+#map {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+#selectContainer {
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  padding: 11px 0;
+}
+
+#countrySelect {
+  width: 200px;
+  margin: 0 auto;
+}
+
+#loadingOverlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  display: none;
+}
+
+.loader-box {
+  width: 150px;
+  height: 150px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.loader-box .spinner-border {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-width: 0.2em;
+  margin-bottom: 15px;
+}
+
+.loader-box p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #444;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.4;
+}
+
+@keyframes modalSlideIn {
+  from {
+      transform: translateY(-20px);
+      opacity: 0;
+  }
+  to {
+      transform: translateY(0);
+      opacity: 1;
+  }
+}
+
+.weather-header {
+  background: linear-gradient(135deg, #4a90e2 0%, #185abd 100%);
+  border-bottom: none;
+  padding: 1.5rem 2rem;
+}
+
+.weather-main-icon {
+  width: 120px;
+  height: 120px;
+}
+
+.forecast-icon {
+  width: 48px;
+  height: 48px;
+}
+
+.forecast-day {
+  transition: all 0.2s ease;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.forecast-day:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+}
+
+.daily-forecast-detail {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.sun-times {
+  background-color: #fff9f2;
+}
+
+.weather-body {
+  background-color: #f8f9fa;
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #4a6cf7 0%, #24bddf 100%);
+}
+
+.bg-light-primary {
+  background-color: rgba(74, 108, 247, 0.1);
+}
+
+.icon-box {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hover-shadow:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+  transition: all 0.3s ease;
+}
+
+#loadingOverlay {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
+}
+
+.loader-box {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.weather-body {
+  background: radial-gradient(circle, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+}
+
+#close-weather {
+  background-color: #4a89dc;
+}
+
+#day-forecast {
+  background: rgb(2,0,36);
+}
+
+#weatherModal .modal-header {
+  border-bottom: none !important;
+  margin-bottom: 0 !important;
+}
+#weatherModal .modal-footer {
+  border-top: none !important;
+  margin-top: 0 !important;
+}
+
+.weather-card {
+  position: sticky;
+  top: 0;
+}
+
+#currencyModal .modal-content {
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+#currencyModal .modal-header {
+  border-radius: 12px 12px 0 0;
+}
+
+#amountInput:focus, 
+#selectedCurrency:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  border-color: #86b7fe;
+}
+
+#resultOutput {
+  font-weight: 600;
+  font-size: 1.1rem;
+  background-color: #f8f9fa;
+  transition: background-color 0.3s;
+}
+
+#resultOutput.highlight {
+  background-color: #e2f0ff;
+}
+
+.card {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#loadingOverlay {
+  backdrop-filter: blur(3px);
+  transition: opacity 0.2s ease-in-out;
+}
+
+#tipsModal .alert {
+  border-radius: 8px;
+  margin-bottom: 0;
+}
+
+.btn {
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background-color: #0d6efd;
+}
+
+.btn-primary:hover {
+  background-color: #0b5ed7;
+  transform: translateY(-1px);
+}
+
+.btn-outline-info:hover {
+  transform: translateY(-1px);
+}
+
+.form-control, .form-select {
+  border-radius: 6px;
+}
+
+@media (max-width: 576px) {
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+  
+  .modal-body {
+    padding: 1rem;
+  }
+}
+.history-timeline .card {
+  border-left: 4px solid #198754;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.history-timeline .card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.history-timeline .card-header {
+  background-color: rgba(25, 135, 84, 0.1);
+  font-weight: 600;
+  color: #198754;
+}
+
+.history-timeline .blockquote {
+  border-left: none;
+  padding-left: 0;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#loadingOverlay .spinner {
+  animation: spin 1s linear infinite;
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+}
+
+.info-card {
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.rounded-4 {
+  border-radius: 1rem !important;
+}
+
+.rounded-pill {
+  border-radius: 50rem !important;
+}
+
+/* Add this if you want to use the animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate__fadeInUp {
+  animation: fadeInUp 0.5s ease forwards;
+}
