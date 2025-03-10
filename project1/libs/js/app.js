@@ -526,7 +526,7 @@ $(function () {
     },
     {
       name: 'history',
-      icon: 'fa-wikipedia-w',
+      icon: 'fa-book',
       title: 'Wikipedia Info',
       handler: () => historyData()
     },
