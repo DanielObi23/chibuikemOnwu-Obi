@@ -188,7 +188,7 @@ $(function () {
       "Historical Sites": { endpoint: "getHistoricalSites", color: "brown", icon: "fa-landmark" }
   };
   
-  map = L.map("map", { layers: [streets] }).setView([54.5, -4], 6);
+  map = L.map("map", { layers: [streets, airportMarkers, cityMarkers] }).setView([54.5, -4], 6);
   var layerControl = L.control.layers(basemaps, overlays).addTo(map);
   function countryCodeNeeded(requestName) {
     switch (requestName) {
